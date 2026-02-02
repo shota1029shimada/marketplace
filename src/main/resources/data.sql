@@ -1,15 +1,28 @@
--- =========================================
--- data.sql (PostgreSQL)
--- 初期データ投入
--- =========================================
-
 -- users
 -- 初期ユーザー3名登録：出品者・購入者・管理者
 INSERT INTO users (name, email, password, role, enabled)
 VALUES
-  ('出品者 A', 'sellerA@example.com', '{noop}password', 'USER',  TRUE),
-  ('購入者 B', 'buyerB@example.com',  '{noop}password', 'USER',  TRUE),
-  ('運営者 C', 'adminC@example.com',  '{noop}adminpass', 'ADMIN', TRUE);
+  (
+    '出品者 A',
+    'sellerA@example.com',
+    '{noop}password',
+    'USER',
+    TRUE
+  ),
+  (
+    '購入者 B',
+    'xyz@example.com',
+    '{noop}password',
+    'USER',
+    TRUE
+  ),
+  (
+    '運営者 C',
+    'adminC@example.com',
+    '{noop}adminpass',
+    'ADMIN',
+    TRUE
+  );
 
 -- category
 -- 商品カテゴリの初期データ
@@ -36,7 +49,7 @@ VALUES
     (SELECT id FROM users WHERE email = 'sellerA@example.com'),
     'ワイヤレスイヤホン',
     'ノイズキャンセリング機能付き。',
-    8000.00,
+    800.00,
     (SELECT id FROM category WHERE name = '家電'),
     '出品中'
   );

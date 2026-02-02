@@ -12,18 +12,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 /**
  * 購入後レビュー（review）
  */
 @Entity
 @Table(name = "review")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Review {
 
 	/**
@@ -78,4 +71,83 @@ public class Review {
 	 */
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt = LocalDateTime.now();
+
+	public Review() {
+	}
+
+	public Review(Long id, AppOrder order, User reviewer, User seller, Item item, Integer rating, String comment,
+			LocalDateTime createdAt) {
+		this.id = id;
+		this.order = order;
+		this.reviewer = reviewer;
+		this.seller = seller;
+		this.item = item;
+		this.rating = rating;
+		this.comment = comment;
+		this.createdAt = createdAt;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public AppOrder getOrder() {
+		return order;
+	}
+
+	public void setOrder(AppOrder order) {
+		this.order = order;
+	}
+
+	public User getReviewer() {
+		return reviewer;
+	}
+
+	public void setReviewer(User reviewer) {
+		this.reviewer = reviewer;
+	}
+
+	public User getSeller() {
+		return seller;
+	}
+
+	public void setSeller(User seller) {
+		this.seller = seller;
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
+	public Integer getRating() {
+		return rating;
+	}
+
+	public void setRating(Integer rating) {
+		this.rating = rating;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
 }

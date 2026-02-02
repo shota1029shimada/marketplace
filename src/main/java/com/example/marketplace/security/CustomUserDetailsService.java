@@ -12,13 +12,14 @@ import org.springframework.stereotype.Service;
 import com.example.marketplace.entity.User;
 import com.example.marketplace.repository.UserRepository;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
 	private final UserRepository users; // User エンティティ操作用リポジトリ
+
+	public CustomUserDetailsService(UserRepository users) {
+		this.users = users;
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username)

@@ -11,18 +11,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 /**
  * お気に入り商品（favorite_item）
  */
 @Entity
 @Table(name = "favorite_item")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class FavoriteItem {
 
 	/**
@@ -51,4 +44,46 @@ public class FavoriteItem {
 	 */
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt = LocalDateTime.now();
+
+	public FavoriteItem() {
+	}
+
+	public FavoriteItem(Long id, User user, Item item, LocalDateTime createdAt) {
+		this.id = id;
+		this.user = user;
+		this.item = item;
+		this.createdAt = createdAt;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
 }

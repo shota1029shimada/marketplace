@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,14 +30,14 @@ public class ItemService {
 	// 依存性はコンストラクタで注入
 	public ItemService(ItemRepository itemRepository,
 			CategoryService categoryService,
-			CloudinaryService cloudinaryService) {
+			ObjectProvider<CloudinaryService> cloudinaryServiceProvider) {
 
 		// フィールドへ商品リポジトリを設定
 		this.itemRepository = itemRepository;
 		// フィールドへカテゴリサービスを設定
 		this.categoryService = categoryService;
 		// フィールドへ Cloudinary サービスを設定
-		this.cloudinaryService = cloudinaryService;
+		this.cloudinaryService = cloudinaryServiceProvider.getIfAvailable();
 	}
 
 	// 商品検索：キーワード/カテゴリ/ページングを組み合わせ、公開中のみ返す
@@ -101,6 +102,10 @@ public class ItemService {
 
 		// 画像が添付されている場合にのみアップロード処理を実行
 		if (imageFile != null && !imageFile.isEmpty()) {
+			if (cloudinaryService == null) {
+				throw new IllegalStateException(
+						"Cloudinary is not configured. Set CLOUDINARY_CLOUD_NAME / CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET to enable image upload.");
+			}
 
 			// Cloudinary へアップロードし URL を受け取る
 			String imageUrl = cloudinaryService.uploadFile(imageFile);
@@ -120,7 +125,7 @@ public class ItemService {
 		itemRepository.findById(id).ifPresent(item -> {
 
 			// 画像 URL がある場合は Cloudinary 側の削除を試みる
-			if (item.getImageUrl() != null) {
+			if (item.getImageUrl() != null && cloudinaryService != null) {
 				try {
 					// URL から public id を推定し削除
 					cloudinaryService.deleteFile(item.getImageUrl());

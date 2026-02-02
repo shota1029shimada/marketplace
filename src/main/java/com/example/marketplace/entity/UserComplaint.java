@@ -11,18 +11,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 /**
  * ユーザー通報情報（user_complaint）
  */
 @Entity
 @Table(name = "user_complaint")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserComplaint {
 
 	/**
@@ -57,4 +50,55 @@ public class UserComplaint {
 	 */
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt = LocalDateTime.now();
+
+	public UserComplaint() {
+	}
+
+	public UserComplaint(Long id, User reportedUser, User reporterUser, String reason, LocalDateTime createdAt) {
+		this.id = id;
+		this.reportedUser = reportedUser;
+		this.reporterUser = reporterUser;
+		this.reason = reason;
+		this.createdAt = createdAt;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public User getReportedUser() {
+		return reportedUser;
+	}
+
+	public void setReportedUser(User reportedUser) {
+		this.reportedUser = reportedUser;
+	}
+
+	public User getReporterUser() {
+		return reporterUser;
+	}
+
+	public void setReporterUser(User reporterUser) {
+		this.reporterUser = reporterUser;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
 }

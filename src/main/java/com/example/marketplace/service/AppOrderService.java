@@ -1,6 +1,7 @@
 package com.example.marketplace.service;
 
 //必要なエンティティ/リポジトリ
+
 //金額・日付・コレクション
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,10 +12,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 //Spring 注釈
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.marketplace.entity.AppOrder;
+import com.example.marketplace.entity.Item;
+import com.example.marketplace.entity.User;
 import com.example.marketplace.repository.AppOrderRepository;
 import com.example.marketplace.repository.ItemRepository;
 //Stripe 型
@@ -35,20 +39,24 @@ public class AppOrderService {
 	public AppOrderService(AppOrderRepository appOrderRepository,
 			ItemRepository itemRepository,
 			ItemService itemService,
-			StripeService stripeService,
+			ObjectProvider<StripeService> stripeServiceProvider,
 			LineNotifyService lineNotifyService) {
 
 		//各依存をフィールドに保持
 		this.appOrderRepository = appOrderRepository;
 		this.itemRepository = itemRepository;
 		this.itemService = itemService;
-		this.stripeService = stripeService;
+		this.stripeService = stripeServiceProvider.getIfAvailable();
 		this.lineNotifyService = lineNotifyService;
 	}
 
 	//購入開始：PaymentIntent 作成＋注文を“決済待ち”で作成（PaymentIntent ID を保存）
 	@Transactional
 	public PaymentIntent initiatePurchase(Long itemId, User buyer) throws StripeException {
+		if (stripeService == null) {
+			throw new IllegalStateException(
+					"Stripe is not configured. Set STRIPE_SECRET_KEY / STRIPE_PUBLIC_KEY to enable payments.");
+		}
 
 		//商品を取得（なければ 400）
 		Item item = itemRepository.findById(itemId)
@@ -91,6 +99,10 @@ public class AppOrderService {
 	//決済完了：PaymentIntent ID で1 件を厳密に取得して確定処理
 	@Transactional
 	public AppOrder completePurchase(String paymentIntentId) throws StripeException {
+		if (stripeService == null) {
+			throw new IllegalStateException(
+					"Stripe is not configured. Set STRIPE_SECRET_KEY / STRIPE_PUBLIC_KEY to enable payments.");
+		}
 
 		// Stripe から Intent の最新状態を取得
 		PaymentIntent paymentIntent = stripeService.retrievePaymentIntent(paymentIntentId);

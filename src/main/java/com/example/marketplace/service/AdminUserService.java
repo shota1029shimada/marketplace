@@ -58,7 +58,8 @@ public class AdminUserService {
 		u.setBanned(true);
 		u.setBanReason(reason);
 		u.setBannedAt(LocalDateTime.now());
-		u.setBannedByAdminId(adminUserId == null ? null : adminUserId.intValue());
+		u.setBannedByAdminId(adminUserId);
+		//u.setBannedByAdminId(adminUserId == null ? null : adminUserId.intValue());
 		if (alsoDisableLogin) {
 			u.setEnabled(false);
 		}

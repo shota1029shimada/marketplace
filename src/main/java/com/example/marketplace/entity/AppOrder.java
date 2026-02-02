@@ -11,19 +11,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import com.example.marketplace.entity.Item;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-/**
+/**s
  * 注文情報（app_order）
  */
 @Entity
 @Table(name = "app_order")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class AppOrder {
 
 	@Id
@@ -33,7 +26,7 @@ public class AppOrder {
 	/**
 	 * 対象商品
 	 */
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "item_id", nullable = false)
 	private Item item;
 
@@ -68,4 +61,74 @@ public class AppOrder {
 	 */
 	@Column(name = "payment_intent_id", length = 128, unique = true)
 	private String paymentIntentId;
+
+	public AppOrder() {
+	}
+
+	public AppOrder(Long id, Item item, User buyer, BigDecimal price, String status, LocalDateTime createdAt,
+			String paymentIntentId) {
+		this.id = id;
+		this.item = item;
+		this.buyer = buyer;
+		this.price = price;
+		this.status = status;
+		this.createdAt = createdAt;
+		this.paymentIntentId = paymentIntentId;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
+	public User getBuyer() {
+		return buyer;
+	}
+
+	public void setBuyer(User buyer) {
+		this.buyer = buyer;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getPaymentIntentId() {
+		return paymentIntentId;
+	}
+
+	public void setPaymentIntentId(String paymentIntentId) {
+		this.paymentIntentId = paymentIntentId;
+	}
 }

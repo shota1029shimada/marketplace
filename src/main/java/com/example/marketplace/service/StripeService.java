@@ -3,6 +3,7 @@ package com.example.marketplace.service;
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 
 import com.stripe.Stripe;
@@ -11,6 +12,7 @@ import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
 
 @Service
+@ConditionalOnExpression("!'${stripe.api.secretKey:}'.isEmpty()")
 public class StripeService {
 
 	// コンストラクタでシークレットキーを初期化

@@ -7,6 +7,7 @@ import java.util.Map;
 
 // 設定値を外部から注入するためのアノテーションを import
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 // DI 対象のサービスであることを示すアノテーションを import
 import org.springframework.stereotype.Service;
 // Spring のファイルアップロード表現を import
@@ -14,9 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 // Cloudinary の Java SDK のエントリポイントを import
 import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 // サービス層として登録
 @Service
+@ConditionalOnExpression(
+		"!'${cloudinary.cloud-name:}'.isEmpty()"
+				+ " && !'${cloudinary.api-key:}'.isEmpty()"
+				+ " && !'${cloudinary.api-secret:}'.isEmpty()")
 public class CloudinaryService {
 
 	// Cloudinary クライアントの参照
@@ -40,18 +46,14 @@ public class CloudinaryService {
 
 	// 画像をアップロードして公開 URL を返す（空ファイルは null）
 	public String uploadFile(MultipartFile file) throws IOException {
-
-		// アップロードなしのケースは null を返す
-		if (file.isEmpty()) {
+		if (file.isEmpty())
 			return null;
-		}
 
-		// バイト配列をそのままアップロード（オプションは既定）
-		Map uploadResult = cloudinary.uploader()
+		Map<?, ?> uploadResult = cloudinary.uploader()
 				.upload(file.getBytes(), ObjectUtils.emptyMap());
 
-		// 返却 Map から公開 URL を取り出して返す
-		return uploadResult.get("url").toString();
+		Object url = uploadResult.get("url");
+		return (url == null) ? null : url.toString();
 	}
 
 	// Cloudinary 上のリソースを削除（URL から public_id を推定）
