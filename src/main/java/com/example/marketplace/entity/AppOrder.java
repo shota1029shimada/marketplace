@@ -11,9 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
-
+import com.example.marketplace.entity.Item;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,7 +33,7 @@ public class AppOrder {
 	/**
 	 * 対象商品
 	 */
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "item_id", nullable = false)
 	private Item item;
 

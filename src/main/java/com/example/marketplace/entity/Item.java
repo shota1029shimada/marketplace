@@ -1,8 +1,10 @@
 package com.example.marketplace.entity;
 
 import java.math.BigDecimal;
+
 import java.time.LocalDateTime;
-import java.util.Locale.Category;
+//import java.util.Locale.Category;
+import com.example.marketplace.entity.Category;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

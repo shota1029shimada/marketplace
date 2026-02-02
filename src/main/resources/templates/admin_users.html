@@ -59,13 +59,18 @@
                 style="display:inline;"
               >
                 <!-- enabled の状態でクラスと文言を切替 -->
+				<!-- Thymeleaf 正式ルールに修正-->
+				
                 <button
                   type="submit"
                   class="button"
                   th:classappend="${user.enabled ? 'danger' : 'secondary'}"
                   th:text="${user.enabled ? '無効にする' : '有効にする'}"
-                  onclick="return confirm('本当にこのユーザーを' + (${user.enabled} ? '無効' : '有効') + 'にしますか？' );"
-                ></button>
+                  onclick="return confirm('本当にこのユーザーを有効にしますか？');"
+				  
+                ></button>				 
+				 <!--				onclick="return confirm('本当にこのユーザーを' + (${user.enabled} ? '無効
+				  				' : '有効') + 'にしますか？');"></button>-->
               </form>
             </td>
           </tr>
