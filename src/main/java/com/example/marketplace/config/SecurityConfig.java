@@ -36,6 +36,7 @@ public class SecurityConfig {
 						// 未ログインでもアクセス可能なパス
 						.requestMatchers(
 								"/login",
+								"/register",
 								"/css/**",
 								"/js/**",
 								"/images/**",
