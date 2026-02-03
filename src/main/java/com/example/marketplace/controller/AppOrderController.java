@@ -85,15 +85,15 @@ public class AppOrderController {
 	// Stripe Elements を用いてクライアント側で決済確認を行う画面を表示する
 	@GetMapping("/confirm-payment") // Page to confirm payment with Stripe Elements
 	public String confirmPayment(
-			// initiatePurchase からの FlashAttribute として渡された clientSecret を受け取る
-			@ModelAttribute("clientSecret") String clientSecret,
-			// 同じく購入対象 itemId を ModelAttribute として受け取る
-			@ModelAttribute("itemId") Long itemId,
 			// 画面に値を渡すための Model
 			Model model) {
 
+		// Flash属性から値を取得（@ModelAttributeではなく、Modelから直接取得）
+		String clientSecret = (String) model.asMap().get("clientSecret");
+		Long itemId = (Long) model.asMap().get("itemId");
+
 		// 必要な情報がない場合は不正なアクセスとみなし、商品一覧へリダイレクト
-		if (clientSecret == null || itemId == null) {
+		if (clientSecret == null || clientSecret.isEmpty() || itemId == null) {
 			return "redirect:/items"; // Redirect if no payment intent data
 		}
 

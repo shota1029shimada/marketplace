@@ -36,7 +36,8 @@ public class UserService {
 	// メールアドレスでユーザを取得
 	public Optional<User> getUserByEmail(String email) {
 		// Optional を返す
-		return userRepository.findByEmail(email);
+		// ログイン時は大文字小文字を区別せず検索しているため、ここも合わせる
+		return userRepository.findByEmailIgnoreCase(email);
 	}
 
 	// 新規/更新保存

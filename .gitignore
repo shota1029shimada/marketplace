@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### 開発環境用設定ファイル ###
+run-dev.sh
