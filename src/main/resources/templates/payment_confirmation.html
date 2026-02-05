@@ -10,11 +10,13 @@
 </head>
 
 <body>
+	<!-- 共通ヘッダー -->
+	<div th:replace="~{fragments/header :: header}"></div>
 	<div class="container">
 		<h1>決済確認</h1>
 		
 		<!-- テストモード案内（開発環境用） -->
-		<div style="background-color: #fff3cd; border: 1px solid #ffc107; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+		<div class="test-mode-notice">
 			<p style="margin: 0 0 10px 0;"><strong>⚠️ テストモード</strong></p>
 			<p style="margin: 0 0 10px 0;">現在はテストモードです。実際のクレジットカード情報は使用できません。</p>
 			<p style="margin: 0;"><strong>テスト用カード番号:</strong></p>

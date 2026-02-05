@@ -8,17 +8,20 @@
 		<!-- 文字コードを UTF-8 に設定 -->
 		<meta charset="UTF-8" />
 		<!-- ページタイトル -->
-		<title>ログイン - フリマアプリ</title>
+		<title>ログイン -Marketplace</title>
 		<!-- 共通スタイルシートを読み込み -->
 		<link rel="stylesheet" th:href="@{/css/style.css}" />
 	</head>
 	<!-- 画面本体 -->
 
 	<body>
+		<!-- 共通ヘッダー -->
+		<div th:replace="~{fragments/header :: header}"></div>
 		<!-- レイアウト中央寄せのコンテナ -->
 		<div class="container">
 			<!-- アプリ名の見出し -->
-			<h1>フリマアプリ</h1>
+			<!--<h1>フリマアプリ</h1>
+			
 			<!-- 機能見出し：ログイン -->
 			<h2>ログイン</h2>
 			<!-- Spring Security の標準/login エンドポイントへ POST 送信 -->

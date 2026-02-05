@@ -15,22 +15,12 @@
 <!-- 画面本体 -->
 
 <body>
+	<!-- 共通ヘッダー -->
+	<div th:replace="~{fragments/header :: header}"></div>
 	<!-- レイアウト中央寄せのコンテナ -->
 	<div class="container">
 		<!-- ページ見出し -->
 		<h1>商品一覧</h1>
-		<!-- 主要ナビゲーション（出品・マイページ・ログアウト） -->
-		<div class="main-nav">
-			<!-- 新規出品画面へのリンク -->
-			<a th:href="@{/items/new}" class="button">商品を出品する</a>
-			<!-- マイページへのリンク -->
-			<a th:href="@{/my-page}" class="button">マイページ</a>
-			<!-- ログアウト送信フォーム（POST で送信） -->
-			<form th:action="@{/logout}" method="post" style="display:inline;">
-				<!-- ログアウトボタン（見た目だけリンク風） -->
-				<button type="submit" class="button secondary">ログアウト</button>
-			</form>
-		</div>
 		<!-- 検索・絞り込みフォーム（GET で自身のページへ） -->
 		<form th:action="@{/items}" method="get" class="filter-form">
 			<!-- キーワード入力ブロック -->

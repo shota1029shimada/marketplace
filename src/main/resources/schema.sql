@@ -1,18 +1,8 @@
--- ========== CLEAN DROP (依存順) ==========
--- 依存関係があるため、利用順とは逆順で DROP
-DROP TABLE IF EXISTS chat CASCADE;
-DROP TABLE IF EXISTS favorite_item CASCADE;
-DROP TABLE IF EXISTS review CASCADE;
-DROP TABLE IF EXISTS app_order CASCADE;
-DROP TABLE IF EXISTS item CASCADE;
-DROP TABLE IF EXISTS category CASCADE;
-DROP TABLE IF EXISTS user_complaint CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
-
 -- ========== CREATE ==========
+-- IF NOT EXISTS を使用して、既にテーブルが存在する場合は作成をスキップ
 
 -- ユーザー情報を管理するテーブル
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   name VARCHAR(50) NOT NULL,                 -- 表示名
   email VARCHAR(255) NOT NULL UNIQUE,        -- ログイン ID
@@ -29,13 +19,13 @@ CREATE TABLE users (
 );
 
 -- カテゴリ（ファッション、家具、家電など）
-CREATE TABLE category (
+CREATE TABLE IF NOT EXISTS category (
   id SERIAL PRIMARY KEY,
   name VARCHAR(50) NOT NULL UNIQUE
 );
 
 -- 出品商品テーブル
-CREATE TABLE item (
+CREATE TABLE IF NOT EXISTS item (
   id SERIAL PRIMARY KEY,
   user_id INT NOT NULL,                      -- 出品者 ID
   name VARCHAR(255) NOT NULL,                -- 商品名
@@ -51,7 +41,7 @@ CREATE TABLE item (
 );
 
 -- 注文情報テーブル
-CREATE TABLE app_order (
+CREATE TABLE IF NOT EXISTS app_order (
   id SERIAL PRIMARY KEY,
   item_id INT NOT NULL,                      -- 対象商品
   buyer_id INT NOT NULL,                     -- 購入者
@@ -65,7 +55,7 @@ CREATE TABLE app_order (
 );
 
 -- チャット（交渉・質問用）
-CREATE TABLE chat (
+CREATE TABLE IF NOT EXISTS chat (
   id SERIAL PRIMARY KEY,
   item_id INT NOT NULL,
   sender_id INT NOT NULL,                    -- 発言者
@@ -77,7 +67,7 @@ CREATE TABLE chat (
 );
 
 -- お気に入り商品
-CREATE TABLE favorite_item (
+CREATE TABLE IF NOT EXISTS favorite_item (
   id SERIAL PRIMARY KEY,
   user_id INT NOT NULL,
   item_id INT NOT NULL,
@@ -89,7 +79,7 @@ CREATE TABLE favorite_item (
 );
 
 -- 購入後レビュー
-CREATE TABLE review (
+CREATE TABLE IF NOT EXISTS review (
   id SERIAL PRIMARY KEY,
   order_id INT NOT NULL UNIQUE,              -- 注文 1 件にレビュー 1 件
   reviewer_id INT NOT NULL,
@@ -106,7 +96,7 @@ CREATE TABLE review (
 );
 
 -- 通報情報（ユーザー同士）
-CREATE TABLE user_complaint (
+CREATE TABLE IF NOT EXISTS user_complaint (
   id SERIAL PRIMARY KEY,
   reported_user_id INT NOT NULL,             -- 通報されたユーザー
   reporter_user_id INT NOT NULL,             -- 通報者

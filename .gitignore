@@ -34,3 +34,6 @@ build/
 
 ### 開発環境用設定ファイル ###
 run-dev.sh
+
+### Uploaded Images ###
+uploads/

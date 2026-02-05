@@ -35,6 +35,12 @@ public class RegisterController {
 
 	@PostMapping("/register")
 	public String register(@Valid @ModelAttribute("form") RegisterForm form, BindingResult bindingResult, Model model) {
+		// パスワード一致確認
+		if (form.getPassword() != null && form.getPasswordConfirm() != null 
+				&& !form.getPassword().equals(form.getPasswordConfirm())) {
+			bindingResult.rejectValue("passwordConfirm", "password.mismatch", "パスワードが一致しません。");
+		}
+
 		if (bindingResult.hasErrors()) {
 			return "register";
 		}
@@ -71,6 +77,9 @@ public class RegisterController {
 		@Size(min = 6, message = "パスワードは6文字以上にしてください。")
 		private String password;
 
+		@NotBlank(message = "パスワード確認は必須です。")
+		private String passwordConfirm;
+
 		public String getName() {
 			return name;
 		}
@@ -93,6 +102,14 @@ public class RegisterController {
 
 		public void setPassword(String password) {
 			this.password = password;
+		}
+
+		public String getPasswordConfirm() {
+			return passwordConfirm;
+		}
+
+		public void setPasswordConfirm(String passwordConfirm) {
+			this.passwordConfirm = passwordConfirm;
 		}
 	}
 }

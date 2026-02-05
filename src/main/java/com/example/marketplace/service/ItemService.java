@@ -26,11 +26,15 @@ public class ItemService {
 
 	// 画像アップロード/削除のための Cloudinary サービス参照
 	private final CloudinaryService cloudinaryService;
+	
+	// 開発環境用のローカルファイル保存サービス
+	private final LocalImageService localImageService;
 
 	// 依存性はコンストラクタで注入
 	public ItemService(ItemRepository itemRepository,
 			CategoryService categoryService,
-			ObjectProvider<CloudinaryService> cloudinaryServiceProvider) {
+			ObjectProvider<CloudinaryService> cloudinaryServiceProvider,
+			LocalImageService localImageService) {
 
 		// フィールドへ商品リポジトリを設定
 		this.itemRepository = itemRepository;
@@ -38,6 +42,8 @@ public class ItemService {
 		this.categoryService = categoryService;
 		// フィールドへ Cloudinary サービスを設定
 		this.cloudinaryService = cloudinaryServiceProvider.getIfAvailable();
+		// フィールドへローカル画像サービスを設定
+		this.localImageService = localImageService;
 	}
 
 	// 商品検索：キーワード/カテゴリ/ページングを組み合わせ、公開中のみ返す
@@ -97,18 +103,21 @@ public class ItemService {
 		return itemRepository.findById(id);
 	}
 
-	// 商品保存：必要なら画像を Cloudinary へアップロードして URL を保存
+	// 商品保存：必要なら画像を Cloudinary またはローカルファイルシステムへアップロードして URL を保存
 	public Item saveItem(Item item, MultipartFile imageFile) throws IOException {
 
 		// 画像が添付されている場合にのみアップロード処理を実行
 		if (imageFile != null && !imageFile.isEmpty()) {
-			if (cloudinaryService == null) {
-				throw new IllegalStateException(
-						"Cloudinary is not configured. Set CLOUDINARY_CLOUD_NAME / CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET to enable image upload.");
+			String imageUrl;
+			
+			// Cloudinaryが設定されている場合はそれを使用、そうでなければローカル保存を使用
+			if (cloudinaryService != null) {
+				// Cloudinary へアップロードし URL を受け取る
+				imageUrl = cloudinaryService.uploadFile(imageFile);
+			} else {
+				// ローカルファイルシステムに保存
+				imageUrl = localImageService.uploadFile(imageFile);
 			}
-
-			// Cloudinary へアップロードし URL を受け取る
-			String imageUrl = cloudinaryService.uploadFile(imageFile);
 
 			// 画像 URL をエンティティへ設定
 			item.setImageUrl(imageUrl);
@@ -124,15 +133,20 @@ public class ItemService {
 		// まず対象商品を取得し、存在する場合のみ削除処理を進める
 		itemRepository.findById(id).ifPresent(item -> {
 
-			// 画像 URL がある場合は Cloudinary 側の削除を試みる
-			if (item.getImageUrl() != null && cloudinaryService != null) {
+			// 画像 URL がある場合は画像を削除
+			if (item.getImageUrl() != null) {
 				try {
-					// URL から public id を推定し削除
-					cloudinaryService.deleteFile(item.getImageUrl());
+					if (cloudinaryService != null) {
+						// Cloudinaryが設定されている場合はCloudinaryから削除
+						cloudinaryService.deleteFile(item.getImageUrl());
+					} else {
+						// そうでなければローカルファイルから削除
+						localImageService.deleteFile(item.getImageUrl());
+					}
 				} catch (IOException e) {
 					// 画像削除失敗は致命ではないためログ出力に留める
 					System.err.println(
-							"Failed to delete image from Cloudinary: " + e.getMessage());
+							"Failed to delete image: " + e.getMessage());
 				}
 			}
 
