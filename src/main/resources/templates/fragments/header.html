@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="UTF-8">
+</head>
+<body>
+	<!-- 共通ヘッダー -->
+	<header class="site-header" th:fragment="header">
+		<div class="header-content">
+			<h1 class="site-title">
+				<a th:href="@{/items}" style="text-decoration: none; color: inherit;">marketplace</a>
+			</h1>
+			<!-- ナビゲーション -->
+			<nav class="header-nav">
+				<!-- 常に表示されるボタン -->
+				<a th:href="@{/items}" class="button header-button secondary">商品一覧</a>
+				
+				<!-- ログイン済みユーザー向けのナビゲーション -->
+				<div class="header-nav-auth" sec:authorize="isAuthenticated()">
+					<a th:href="@{/my-page}" class="button header-button">マイページ</a>
+					<a th:href="@{/my-page/favorites}" class="button header-button">お気に入り</a>
+					<a th:href="@{/my-page/reviews}" class="button header-button">自分の評価</a>
+					<a th:href="@{/items/new}" class="button header-button">商品を出品</a>
+					<form th:action="@{/logout}" method="post" style="display:inline;">
+						<button type="submit" class="button header-button secondary">ログアウト</button>
+					</form>
+				</div>
+				
+				<!-- 管理者向けのナビゲーション -->
+				<div class="header-nav-admin" sec:authorize="hasRole('ADMIN')">
+					<a th:href="@{/dashboard}" class="button header-button">管理者画面</a>
+				</div>
+			</nav>
+		</div>
+	</header>
+</body>
+</html>
